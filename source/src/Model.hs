@@ -29,11 +29,22 @@ module Model where
     type Name = String
     type Params = [String]
     type Comments = [String]
-    data Signature = FunctionSignature Comments Params Name 
-                   | MetatableSignature Comments Params Name 
-                   deriving (Generic, Show, Eq)
+    data Signature 
+        = FunctionSignature {
+                  signatureComments:: Comments
+                , sigParams :: Params
+                , sigName :: Name 
+            }
+        | MetatableSignature {
+                  metaComments :: Comments
+                , metaParams :: Params
+                , metaName :: Name 
+            }
+        deriving (Generic, Show, Eq)
 
     type Snippets = Map String Snippet
+
+
     data Snippet = Snippet {
           prefix :: [String]
         , body :: [String]
