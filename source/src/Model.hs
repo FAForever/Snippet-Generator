@@ -26,7 +26,15 @@ module Model where
     isIdentifier (TokenIdentifier _) = True 
     isIdentifier _                   = False
 
+    data LoadedFile = LoadedFile {
+          directory :: String
+        , name :: String
+        , path :: String
+        , content :: String
+    }
+
     type Name = String
+    type Source = String
     type Params = [String]
     type Comments = [String]
     data Signature 
@@ -43,8 +51,6 @@ module Model where
         deriving (Generic, Show, Eq)
 
     type Snippets = Map String Snippet
-
-
     data Snippet = Snippet {
           prefix :: [String]
         , body :: [String]

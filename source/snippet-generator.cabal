@@ -57,7 +57,8 @@ library
                        Algebra,
                        Model,
                        Lexer,
-                       Parser
+                       Parser,
+                       Options
 
   -- LANGUAGE extensions used by modules in this package.
   default-extensions:  DeriveGeneric

@@ -35,24 +35,24 @@ module Algebra where
             cs' = filter (\s -> not (s == "")) cs
 
     -- adds in the file name to the name of the function
-    addFileName :: Name -> Algebra Signature
-    addFileName f cs ps n = FunctionSignature cs ps (f ++ "." ++ n) 
+    -- addFileName :: Algebra Signature
+    -- addFileName f cs ps n = FunctionSignature cs ps (f ++ "." ++ n) 
 
     -- type Snippets = Map String Snippet
     -- data Snippet = Snippet {
-    --       prefix :: [String]
+    --       identifier :: [String]
     --     , body :: [String]
     --     , description :: String
     -- }
 
-    toSnippet :: Algebra Snippet 
-    toSnippet cs ps n = Snippet prefix body description
+    toSnippet :: Source -> Algebra Snippet 
+    toSnippet s cs ps n = Snippet prefix body description
         where
             prefix :: [String]
             prefix = [n]
 
             body :: [String]
-            body = [n ++ "(" ++ ps' ++ ")"]
+            body = [s ++ n ++ "(" ++ ps' ++ ")"]
                 where
                     ps' :: String
                     ps' = intercalate ", " (map (uncurry format) (zip [1..] ps )) 
