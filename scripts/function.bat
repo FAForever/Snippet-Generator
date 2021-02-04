@@ -1,0 +1,1 @@
+snippet-generator -t function -i %1

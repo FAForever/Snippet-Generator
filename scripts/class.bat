@@ -1,0 +1,1 @@
+snippet-generator -t class -i %1 -a -c %2

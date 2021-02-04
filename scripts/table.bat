@@ -1,0 +1,1 @@
+snippet-generator -t table -i %1

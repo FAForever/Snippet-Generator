@@ -1,0 +1,1 @@
+snippet-generator -t metatable -i %1 -a -c %2
