@@ -15,141 +15,202 @@ module Main where
     import Data.Aeson.Encode.Pretty
     import Data.ByteString.Lazy (writeFile)
 
-    import Options
+    import qualified Generators.Common as GenCommon
+    import qualified Generators.Class as GenClass
+    import qualified Generators.Function as GenFunction
+    import qualified Generators.Metatable as GenMetatable
+    import qualified Generators.Table as GenTable
+    
     import Model
-    import Lexer
-    import Parser
-    import Algebra
+    import Configuration
 
     main :: IO()
     main = do 
         -- load in arguments
         args        <- getArgs
-        (opts, _)   <- compilerOpts args
+        (opts, _)   <- readArgs args
+        config      <- interpretArgs opts
 
         -- load in file
-        lf <- loadFile (optFile opts)
+        content <- readFile (conPath config)
 
-        -- determine the name of the output file
-        let filename = case optPrefix opts of 
-                (Just p) -> p ++ ""
-                Nothing  -> name lf ++ ""
+        -- generate 'dem snippets
+        snippets <- case (conType config) of 
+            "class"         -> GenClass.generate config content
+            "function"      -> GenFunction.generate config content
+            "metatable"     -> GenMetatable.generate config content
+            "table"         -> GenTable.generate config content
 
-        -- determine the context of the function
-        let source = case optAddFileName opts of 
-                False -> ""
-                True  -> filename ++ "."
+        -- write it all out!
+        let dictionary = GenCommon.toDictionary snippets
+        let output = ((conDirectory config) </> (conFile config)) ++ ".code-snippets"
+        writeFile output (encodePretty dictionary)
 
-        -- process the file
-        let ss  = processFile lf                -- turn file into signatures
-        let ss' = postProcessSignatures ss      -- clean up the signatures
-        let ds  = processSignatures source ss'  -- turn the signatures into snippets
+    -- tokenize :: Options -> LoadedFile -> IO [Token]
+    -- tokenize opts lf = do 
+    --     -- retrieve relevant information
+    --     let debug   = optDebug opts     
+    --     let contx   = optClass opts 
 
-        let output = ((directory lf) </> filename) ++ ".code-snippets"
-        writeFile output (encodePretty ds)
+    --     let direc   = directory lf
+    --     let filen   = name lf
 
-    loadFile :: String -> IO LoadedFile
-    loadFile path = do 
-        -- generic information from the path
-        let directory = dropFileName path 
-        let name = takeBaseName path
+    --     -- get the tokens
+    --     let tokens = alexScanTokens (content lf)
 
-        -- loading the file
-        file <- readFile path
+    --     case debug of 
+    --         True -> do  putStrLn ("Writing out pre-token stream...")
+    --                     writeFile (direc </> filen ++ ".pretoken") (encodePretty tokens)
+    --         False ->    return ()
 
-        -- return the file
-        return LoadedFile { 
-              directory = directory
-            , name = name
-            , content = file 
-            , path = path
-            }
+    --     -- post-process them
+    --     let tokens' = case contx of 
+    --             Nothing  -> postProcessTokens tokens 
+    --             (Just c) -> postProcessTokens $ transformTokenStream c tokens
 
-    -- processes the file, turning it into signatures
-    processFile :: LoadedFile -> [Signature]
-    processFile lf = signatures 
-        where
-            -- runs the tokenizer over the file
-            tokens :: [Token]
-            tokens = (postProcessTokens . alexScanTokens) (content lf) 
+    --     case debug of 
+    --         True -> do  putStrLn ("Writing out post-token stream...")
+    --                     writeFile (direc </> filen ++ ".posttoken") (encodePretty tokens')
+    --         False ->    return ()
 
-            -- runs the parser over the tokens
-            signatures :: [Signature]
-            signatures = case parse findSnippets tokens of
-                []          -> []
-                ((s, a):_)  -> s
+    --     -- make it our return value
+    --     return tokens'
 
-    -- post processes the signatures, removing inconsistencies
-    postProcessSignatures :: [Signature] -> [Signature]
-    postProcessSignatures signatures = noEmptyComments
-        where
-            -- remove '--', '#' and initial whitespace
-            noCommentTags = map (fold removeCommentTags) signatures 
+    -- signaturize :: Options -> LoadedFile -> [Token] -> IO [Signature]
+    -- signaturize opts lf ts = do 
+    --     -- retrieve relevant information
+    --     let debug   = optDebug opts 
+    --     let contx   = optClass opts 
 
-            -- remove empty comments
-            noEmptyComments = map (fold removeEmptyComments) noCommentTags
+    --     let direc   = directory lf
+    --     let filen   = name lf
 
-    -- processes the signatures into a dictionary of snippets
-    processSignatures :: Source ->  [Signature] -> Map String Snippet
-    processSignatures source signatures = constructDictionary $ map (fold (toSnippet source)) signatures
-            
+    --     -- determine the name of the output file
+    --     let filename = case optPrefix opts of 
+    --             (Just p) -> p ++ ""
+    --             Nothing  -> name lf ++ ""
 
-    -- runScanner :: String -> IO()
-    -- runScanner path = do 
+    --     -- determine the context of the function
+    --     let source = case optAddFileName opts of 
+    --             False -> ""
+    --             True  -> filename ++ "."
+
+    --     -- process them into signatures
+    --     let signatures = case parse findSignatures ts of
+    --             []          -> []
+    --             ((s, a):_)  -> s
+
+    --     let count = length signatures
+    --     case debug of 
+    --         True -> do  putStrLn ("Writing out signatures (" ++ show count ++ ") stream...")
+    --                     writeFile (direc </> filen ++ ".sigs") (encodePretty signatures)
+    --         False ->    return () 
+
+    --     -- make it our return value
+    --     return signatures  
+
+    -- snippetize :: Options -> LoadedFile -> [Signature] -> IO (Map String Snippet)
+    -- snippetize opts lf ss = do    
+    --     -- retrieve relevant information
+    --     let debug   = optDebug opts 
+    --     let contx   = optClass opts 
+
+    --     let direc   = directory lf
+    --     let filen    = name lf
+
+    --     -- determine the name of the output file
+    --     let filename = case optPrefix opts of 
+    --             (Just p) -> p ++ ""
+    --             Nothing  -> name lf ++ ""
+
+    --     -- determine the context of the function
+    --     let source = case optAddFileName opts of 
+    --             False -> ""
+    --             True  -> filename ++ "."
+
+    --     -- turn them into the correct format
+    --     let ds  = processSignatures source ss
+
+    --     return ds
+
+
+    -- loadFile :: String -> IO LoadedFile
+    -- loadFile path = do 
     --     -- generic information from the path
     --     let directory = dropFileName path 
     --     let name = takeBaseName path
-    --     let output = (directory </> name) ++ ".json"
 
     --     -- loading the file
     --     file <- readFile path
-    --     putStrLn "File loaded"
 
-    --     -- generating the tokens
-    --     let tokens = (postProcessTokens . alexScanTokens) file 
-    --     putStrLn "Generated tokens"
+    --     -- return the file
+    --     return LoadedFile { 
+    --           directory = directory
+    --         , name = name
+    --         , content = file 
+    --         , path = path
+    --         }
 
-    --     -- generating the signatures
-    --     let signatures = case parse findSnippets tokens of
+    -- tokenizeFile :: LoadedFile -> [Token]
+    -- tokenizeFile lf = alexScanTokens (content lf)
+
+
+    -- -- processes the file, turning it into signatures
+    -- processFile :: LoadedFile -> [Signature]
+    -- processFile lf = signatures 
+    --     where
+    --         -- runs the tokenizer over the file
+    --         tokens :: [Token]
+    --         tokens = (postProcessTokens . alexScanTokens) (content lf) 
+
+    --         -- runs the parser over the tokens
+    --         signatures :: [Signature]
+    --         signatures = case parse findSignatures tokens of
     --             []          -> []
     --             ((s, a):_)  -> s
-    --     putStrLn "Generated signatures"
 
-    --     -- cleaing up the signatures
-    --     let noCommentTags = map (fold removeCommentTags) signatures 
-    --     let noEmptyComments = map (fold removeEmptyComments) noCommentTags
-    --     let appendFilename = map (fold (addFileName name)) noEmptyComments
-    --     putStrLn "Folded into snippets"
+    -- -- post processes the signatures, removing inconsistencies
+    -- postProcessSignatures :: [Signature] -> [Signature]
+    -- postProcessSignatures signatures = noEmptyComments
+    --     where
+    --         -- remove '--', '#' and initial whitespace
+    --         noCommentTags = map (fold removeCommentTags) signatures 
 
-    --     -- generating the snippets
-    --     let snippets = map (fold toSnippet) appendFilename 
-    --     let dictionary = constructDictionary snippets 
+    --         -- remove empty comments
+    --         noEmptyComments = map (fold removeEmptyComments) noCommentTags
 
-    --     writeFile output (encodePretty dictionary)
-    --     putStrLn ("Wrote output to: " ++ output)
+    -- -- processes the signatures into a dictionary of snippets
+    -- processSignatures :: Source ->  [Signature] -> Map String Snippet
+    -- processSignatures source signatures = constructDictionary $ map (fold (toSnippet source)) signatures
+    
+    -- constructDictionary :: [Snippet] -> Map String Snippet 
+    -- constructDictionary ss = foldr f b ss 
+    --     where
+    --         f :: Snippet -> Map String Snippet -> Map String Snippet 
+    --         f s = insert (head $ prefix s) s 
 
-    constructDictionary :: [Snippet] -> Map String Snippet 
-    constructDictionary ss = foldr f b ss 
-        where
-            f :: Snippet -> Map String Snippet -> Map String Snippet 
-            f s = insert (head $ prefix s) s 
+    --         b :: Map String Snippet
+    --         b = empty 
 
-            b :: Map String Snippet
-            b = empty 
+    -- transformTokenStream :: String -> [Token] -> [Token]
+    -- transformTokenStream c ts = case parse (transformMetaSignatures c) ts of 
+    --     []          -> []
+    --     ((s, a):_)  -> s
 
-    -- Adds in an additional comment token in front of each function token
-    postProcessTokens :: [Token] -> [Token]
-    postProcessTokens ts = foldr f b ts
-        where
-            f :: Token -> [Token] -> [Token]
-            f t acc 
-                | isFunction t = (TokenComment "") : t : acc 
-                | otherwise    = t : acc 
 
-            b :: [Token]
-            b = [] 
+    -- -- Adds in an additional comment token in front of each function token
+    -- postProcessTokens :: [Token] -> [Token]
+    -- postProcessTokens ts = foldr f b ts
+    --     where
+    --         f :: Token -> [Token] -> [Token]
+    --         f t acc 
+    --             | isFunction t = (TokenComment "") : t : acc 
+    --             | otherwise    = t : acc 
 
-            -- checks whether a token is a function token
-            isFunction :: Token -> Bool 
-            isFunction TokenFunction = True 
-            isFunction _             = False
+    --         b :: [Token]
+    --         b = [] 
+
+    --         -- checks whether a token is a function token
+    --         isFunction :: Token -> Bool 
+    --         isFunction TokenFunction = True 
+    --         isFunction _             = False

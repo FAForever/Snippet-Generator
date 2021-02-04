@@ -8,35 +8,47 @@ module Algebra where
 
     -- a very basic algebra
     type Algebra r = (
-            Comments -> Params -> Name -> r
+            -- FunctionSignature
+            Comments -> Params -> Name -> r,
+
+            -- MetatableSignature
+            Comments -> Params -> Name -> String -> r
         )
 
     -- a very basic fold
     fold :: Algebra r -> Signature -> r 
-    fold (snippet) (FunctionSignature cs ps n) = snippet cs ps n   
+    fold (func, meta) (FunctionSignature cs ps n)       = func cs ps n  
+    fold (func, meta) (MetatableSignature cs ps n c)    = meta cs ps n c
+
+    isCommentTag :: Char -> Bool 
+    isCommentTag '-' = True 
+    isCommentTag '#' = True 
+    isCommentTag _   = False 
 
     -- removes comment tags such as '-' or '#' at the start of the string
     removeCommentTags :: Algebra Signature
-    removeCommentTags cs ps n = FunctionSignature cs' ps n 
+    removeCommentTags = (functionSignature, metaSignature)
         where
-            cs' :: Comments 
-            cs' = map (dropWhile (\c -> isCommentTag c || isSpace c)) cs 
+            functionSignature :: Comments -> Params -> Name -> Signature
+            functionSignature cs ps n = FunctionSignature (removeCommentTags' cs) ps n 
 
-            isCommentTag :: Char -> Bool 
-            isCommentTag '-' = True 
-            isCommentTag '#' = True 
-            isCommentTag _   = False 
+            metaSignature :: Comments -> Params -> Name -> String -> Signature
+            metaSignature cs ps n c = MetatableSignature (removeCommentTags' cs) ps n c 
+
+
 
     -- filters out empty comments
     removeEmptyComments :: Algebra Signature
-    removeEmptyComments cs ps n = FunctionSignature cs' ps n 
+    removeEmptyComments = (functionSignature, metaSignature)
         where
-            cs' :: Comments 
-            cs' = filter (\s -> not (s == "")) cs
+            functionSignature :: Comments -> Params -> Name -> Signature
+            functionSignature cs ps n = FunctionSignature (removeEmptyComments' cs) ps n 
 
-    -- adds in the file name to the name of the function
-    -- addFileName :: Algebra Signature
-    -- addFileName f cs ps n = FunctionSignature cs ps (f ++ "." ++ n) 
+            metaSignature :: Comments -> Params -> Name -> String -> Signature
+            metaSignature cs ps n c = MetatableSignature (removeEmptyComments' cs) ps n c  
+
+            removeEmptyComments' :: Comments -> Comments 
+            removeEmptyComments' cs = filter (\s -> not (s == "")) cs
 
     -- type Snippets = Map String Snippet
     -- data Snippet = Snippet {
@@ -46,21 +58,27 @@ module Algebra where
     -- }
 
     toSnippet :: Source -> Algebra Snippet 
-    toSnippet s cs ps n = Snippet prefix body description
+    toSnippet s = (functionSignature, metaSignature)
         where
-            prefix :: [String]
-            prefix = [n]
 
-            body :: [String]
-            body = [s ++ n ++ "(" ++ ps' ++ ")"]
+
+            metaSignature :: Comments -> Params -> Name -> String -> Snippet
+            metaSignature cs ps n c = Snippet prefix body description  
                 where
-                    ps' :: String
-                    ps' = intercalate ", " (map (uncurry format) (zip [1..] ps )) 
+                    prefix :: [String]
+                    prefix = [c ++ ":" ++ n]
 
-                    -- formats the argument
-                    format :: Int -> String -> String 
-                    format i s = "${" ++ (show i) ++ ":" ++ s ++ "}"
-            
-            description :: String 
-            description = concat $ intersperse ("\r\n") cs
+                    body :: [String]
+                    body = ["${1:" ++ c ++ "}" ++ ":" ++ n ++ "(" ++ ps' ++ ")"]
+                        where
+                            ps' :: String
+                            ps' = intercalate ", " (map (uncurry format) (zip [2..] ps )) 
+
+                            -- formats the argument
+                            format :: Int -> String -> String 
+                            format i s = "${" ++ (show i) ++ ":" ++ s ++ "}"
+                    
+                    description :: String 
+                    description = concat $ intersperse ("\r\n") cs
+
 

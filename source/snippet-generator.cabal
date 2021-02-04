@@ -54,11 +54,14 @@ library
 
   -- Modules included in this library but not exported.
   other-modules:       Main,
-                       Algebra,
                        Model,
                        Lexer,
-                       Parser,
-                       Options
+                       Configuration,
+                       Generators.Common,
+                       Generators.Function,
+                       Generators.Class,
+                       Generators.Table,
+                       Generators.Metatable
 
   -- LANGUAGE extensions used by modules in this package.
   default-extensions:  DeriveGeneric
