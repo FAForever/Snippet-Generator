@@ -89,7 +89,7 @@ module Generators.Metatable where
                 False ->    return () 
 
         -- make it our return value
-        return signatures  
+        return signatures'
 
     --- | Post processes the signatures by cleaning up the comments.
     postProcessSignatures :: [Signature] -> [Signature]
@@ -117,7 +117,7 @@ module Generators.Metatable where
                     cl = fromMaybe c c'
 
                     prefix :: [String]
-                    prefix = [cl ++ ":" ++ n]
+                    prefix = [n] -- [cl ++ ":" ++ n]
 
                     body :: [String]
                     body = ["${1:" ++ cl ++ "}" ++ ":" ++ n ++ "(" ++ ps' ++ ")"]

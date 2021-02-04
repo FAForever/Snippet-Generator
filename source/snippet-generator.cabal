@@ -48,13 +48,13 @@ build-type:          Simple
 -- README.
 extra-source-files:  CHANGELOG.md
 
-library
+executable snippet-generator
   -- Modules exported by the library.
   -- exposed-modules:
+  main-is: Main.hs  
 
   -- Modules included in this library but not exported.
-  other-modules:       Main,
-                       Model,
+  other-modules:       Model,
                        Lexer,
                        Configuration,
                        Generators.Common,

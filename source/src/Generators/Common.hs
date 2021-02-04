@@ -4,6 +4,8 @@ module Generators.Common where
     import Prelude hiding ((<$), (<*>), (<*), (*>))
     import ParseLib.Abstract hiding (empty)
 
+    import Debug.Trace
+
     import Data.Char
     import Data.Maybe
     import Data.Map hiding (foldr, map, filter)
@@ -46,14 +48,20 @@ module Generators.Common where
     removeEmptyStrings :: [String] -> [String] 
     removeEmptyStrings cs = filter (\s -> not (s == "")) cs
 
-    --- | Removes the comment tags at the start of the strings
+    --- | Removes the comment tags at the start and end of the strings
     removeCommentTags :: [String] -> [String] 
-    removeCommentTags cs = map (dropWhile (\c -> isCommentTag c || isSpace c)) cs 
+    removeCommentTags cs = map reverse rs'
+        where
+            cs' = map (dropWhile (\c -> isCommentTag c || isSpace c)) cs
+            rs = map reverse cs'
+            rs' = map (dropWhile (\c -> isCommentTag c || isSpace c)) rs
 
     --- | Checks whether the character is considered a comment tag
     isCommentTag :: Char -> Bool 
     isCommentTag '-' = True 
     isCommentTag '#' = True 
+    isCommentTag '[' = True
+    isCommentTag ']'  = True
     isCommentTag _   = False 
 
 

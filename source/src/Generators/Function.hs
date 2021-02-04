@@ -86,7 +86,7 @@ module Generators.Function (generate) where
                 False ->    return () 
 
         -- make it our return value
-        return signatures  
+        return signatures'  
 
     --- | Post processes the signatures by cleaning up the comments.
     postProcessSignatures :: [Signature] -> [Signature]
@@ -102,7 +102,13 @@ module Generators.Function (generate) where
     snippetize config signatures = map toSnippet signatures
         where
             -- retrieve information
-            context = conContext config
+            temp = case conAppend config of 
+                False -> conFile config
+                True -> conContext config
+
+            context = case temp of 
+                "" -> "" 
+                s -> s ++ "." 
 
             --- | Turns a single signature into the corresponding snippet.
             toSnippet :: Signature -> Snippet

@@ -91,7 +91,7 @@ module Generators.Table where
                 False ->    return () 
 
         -- make it our return value
-        return signatures  
+        return signatures'  
 
     --- | Post processes the signatures by cleaning up the comments.
     postProcessSignatures :: [Signature] -> [Signature]

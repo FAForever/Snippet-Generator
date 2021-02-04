@@ -175,7 +175,7 @@ module Configuration (
               conPath       = conPath
             , conType       = conType
             , conAppend     = conAppend
-            , conContext    = conContext ++ "."
+            , conContext    = conContext
             , conClass      = conClass
             , conDebug      = conDebug
             , conFile       = conFile
