@@ -2,10 +2,10 @@
 module Model where
 
     import GHC.Generics
-
     import Data.Aeson
-    import Data.Map
 
+    --- | A simple token that takes out the 
+    -- important bits and pieces from a lua file.
     data Token  = TokenFunction
                 | TokenComment String 
                 | TokenOpen
@@ -18,39 +18,15 @@ module Model where
                 | TokenEmpty 
                 deriving (Generic, Show, Eq)
 
-    -- data LoadedFile = LoadedFile {
-    --       directory :: String
-    --     , name :: String
-    --     , path :: String
-    --     , content :: String
-    -- }
-
-    -- type Name = String
-    -- type Source = String
-    -- type Params = [String]
-    -- type Comments = [String]
-    -- data Signature 
-    --     = FunctionSignature {
-    --               sigComments:: Comments
-    --             , sigParams :: Params
-    --             , sigName :: Name 
-    --         }
-    --     | MetatableSignature {
-    --               metaComments :: Comments
-    --             , metaParams :: Params
-    --             , metaName :: Name
-    --             , metaContext :: String
-    --         }
-    --     deriving (Generic, Show, Eq)
-
-    type Snippets = Map String Snippet
+    --- | A snippet that represents a function with a prefix 
+    -- (trigger), body (snippet itself) and a description.
     data Snippet = Snippet {
           prefix :: [String]
         , body :: [String]
         , description :: String
     } deriving ( Generic, Show, Eq )
 
+    -- allows us to easily encode it
+    instance FromJSON Snippet
     instance ToJSON Snippet where
         toEncoding = genericToEncoding defaultOptions
-
-    instance FromJSON Snippet
