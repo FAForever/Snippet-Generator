@@ -3,3 +3,5 @@ function/*.code-snippets
 metatable/*.code-snippets
 table/*.code-snippets
 output/*.code-snippets
+
+*.lua
