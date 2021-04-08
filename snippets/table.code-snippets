@@ -8,6 +8,15 @@
         ],
         "description": "Remove all keys in t2 from t1."
     },
+    "table.insert": {
+        "prefix": [
+            "table.insert"
+        ],
+        "body": [
+            "table.insert(${1:table}, ${2:v})"
+        ],
+        "description": "Appends v at the end of table."
+    },
     "table.keys": {
         "prefix": [
             "table.keys"
@@ -16,15 +25,6 @@
             "table.keys(${1:t}, ${2:comp})"
         ],
         "description": "table.keys(t, [comp]) returns a list of the keys of t, sorted.\r\ncomp] is an optional comparison function, defaulting to less-than, e.g.\r\ntable.keys(t) -- returns keys in increasing order (low performance with large tables)\r\ntable.keys(t, function(a, b) return a > b end) -- returns keys in decreasing order (low performance with large tables)\r\ntable.keys(t, false) -- returns keys without comparing/sorting (better performance with large tables)"
-    },
-    "math.round": {
-        "prefix": [
-            "math.round"
-        ],
-        "body": [
-            "math.round(${1:num}, ${2:idp})"
-        ],
-        "description": "Rounds a number to specified double precision"
     },
     "table.map": {
         "prefix": [
@@ -53,15 +53,7 @@
         ],
         "description": "table.binsert(t, value, cmp) binary insert value into table using cmp-func"
     },
-    "math.clamp": {
-        "prefix": [
-            "math.clamp"
-        ],
-        "body": [
-            "math.clamp(${1:v}, ${2:min}, ${3:max})"
-        ],
-        "description": "Clamps numeric value to specified Min and Max range"
-    },
+
     "table.find": {
         "prefix": [
             "table.find"
@@ -241,6 +233,15 @@
             "table.unique(${1:t})"
         ],
         "description": "Returns a new table with unique values stored using numeric keys and it does not preserve keys of the original table"
+    },
+    "table.sort": {
+        "prefix": [
+            "table.sort"
+        ],
+        "body": [
+            "table.sort(${1:t}, ${2:comp})"
+        ],
+        "description": "Sorts the table in place."
     },
     "table.sorted": {
         "prefix": [

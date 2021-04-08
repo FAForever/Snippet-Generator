@@ -1,0 +1,282 @@
+{
+    "math.round": {
+        "prefix": [
+            "math.round"
+        ],
+        "body": [
+            "math.round(${1:num}, ${2:idp})"
+        ],
+        "description": "Rounds a number to specified double precision"
+    },
+
+    "math.clamp": {
+        "prefix": [
+            "math.clamp"
+        ],
+        "body": [
+            "math.clamp(${1:x}, ${2:min}, ${3:max})"
+        ],
+        "description": "Clamps numeric value to specified Min and Max range"
+    },
+
+    "math.abs": {
+        "prefix": [
+            "math.abs"
+        ],
+        "body": [
+            "math.abs(${1:x})"
+        ],
+        "description": "Returns the absolute value of x. (integer/float)"
+    },
+
+    "math.acos": {
+        "prefix": [
+            "math.acos"
+        ],
+        "body": [
+            "math.acos(${1:x})"
+        ],
+        "description": "Returns the arc cosine of x (in radians)."
+    },
+
+    "math.asin": {
+        "prefix": [
+            "math.asin"
+        ],
+        "body": [
+            "math.asin(${1:x})"
+        ],
+        "description": "Returns the arc sine of x (in radians)."
+    },
+
+    "math.atan": {
+        "prefix": [
+            "math.atan"
+        ],
+        "body": [
+            "math.atan(${1:y}, ${2:x})"
+        ],
+        "description": "Returns the arc tangent of y/x (in radians), but uses the signs of both arguments to find the quadrant of the result. (It also handles correctly the case of x being zero.) The default value for x is 1, so that the call math.atan(y) returns the arc tangent of y."
+    },
+
+    "math.ceil": {
+        "prefix": [
+            "math.ceil"
+        ],
+        "body": [
+            "math.ceil(${1:x})"
+        ],
+        "description": "Returns the smallest integral value larger than or equal to x."
+    },
+
+    "math.cos": {
+        "prefix": [
+            "math.cos"
+        ],
+        "body": [
+            "math.cos(${1:x})"
+        ],
+        "description": "Returns the cosine of x (assumed to be in radians)."
+    },
+
+    "math.deg": {
+        "prefix": [
+            "math.deg"
+        ],
+        "body": [
+            "math.deg(${1:x})"
+        ],
+        "description": "Converts the angle x from radians to degrees."
+    },
+
+    "math.exp": {
+        "prefix": [
+            "math.exp"
+        ],
+        "body": [
+            "math.exp(${1:x})"
+        ],
+        "description": "Returns the value e^x (where e is the base of natural logarithms)."
+    },
+
+    "math.floor": {
+        "prefix": [
+            "math.floor"
+        ],
+        "body": [
+            "math.floor(${1:x})"
+        ],
+        "description": "Returns the largest integral value smaller than or equal to x."
+    },
+
+    "math.fmod": {
+        "prefix": [
+            "math.fmod"
+        ],
+        "body": [
+            "math.fmod(${1:x}, ${2:y})"
+        ],
+        "description": "Returns the remainder of the division of x by y that rounds the quotient towards zero. (integer/float)"
+    },
+
+    "math.huge": {
+        "prefix": [
+            "math.huge"
+        ],
+        "body": [
+            "math.huge"
+        ],
+        "description": "The float value HUGE_VAL, a value larger than any other numeric value."
+    },    
+
+    "math.log": {
+        "prefix": [
+            "math.log"
+        ],
+        "body": [
+            "math.log(${1:x}, ${2:base})"
+        ],
+        "description": "Returns the logarithm of x in the given base. The default for base is e (so that the function returns the natural logarithm of x)."
+    },    
+
+    "math.max": {
+        "prefix": [
+            "math.max"
+        ],
+        "body": [
+            "math.max(${1:v1}, ${2:v2})"
+        ],
+        "description": "Returns the argument with the maximum value, according to the Lua operator <. (integer/float)"
+    },  
+
+    "math.maxinteger": {
+        "prefix": [
+            "math.maxinteger"
+        ],
+        "body": [
+            "math.maxinteger"
+        ],
+        "description": "An integer with the maximum value for an integer."
+    },  
+
+    "math.min": {
+        "prefix": [
+            "math.min"
+        ],
+        "body": [
+            "math.min(${1:v1}, ${2:v2})"
+        ],
+        "description": "Returns the argument with the minimum value, according to the Lua operator <. (integer/float)"
+    },  
+
+    "math.mininteger": {
+        "prefix": [
+            "math.mininteger"
+        ],
+        "body": [
+            "math.mininteger"
+        ],
+        "description": "An integer with the minimum value for an integer."
+    },  
+
+    "math.modf": {
+        "prefix": [
+            "math.modf"
+        ],
+        "body": [
+            "math.modf(${1:x})"
+        ],
+        "description": "Returns the integral part of x and the fractional part of x. Its second result is always a float."
+    },  
+
+    "math.pi": {
+        "prefix": [
+            "math.pi"
+        ],
+        "body": [
+            "math.pi"
+        ],
+        "description": "The value of π."
+    },  
+
+    "math.rad": {
+        "prefix": [
+            "math.rad"
+        ],
+        "body": [
+            "math.rad(${1:x})"
+        ],
+        "description": "Converts the angle x from degrees to radians."
+    },
+
+    "math.random": {
+        "prefix": [
+            "math.random"
+        ],
+        "body": [
+            "Random()"
+        ],
+        "description": "Returns a random floating point number between 0.0 and 1.0."
+    },
+
+    "math.sin": {
+        "prefix": [
+            "math.sin"
+        ],
+        "body": [
+            "math.sin(${1:x})"
+        ],
+        "description": "Returns the sine of x (assumed to be in radians)."
+    },
+
+    "math.sqrt": {
+        "prefix": [
+            "math.sqrt"
+        ],
+        "body": [
+            "math.sqrt(${1:x})"
+        ],
+        "description": "Returns the square root of x. (You can also use the expression x^0.5 to compute this value.)"
+    },
+
+    "math.tan": {
+        "prefix": [
+            "math.tan"
+        ],
+        "body": [
+            "math.tan(${1:x})"
+        ],
+        "description": "Returns the tangent of x (assumed to be in radians)."
+    },
+
+    "math.tointeger": {
+        "prefix": [
+            "math.tointeger"
+        ],
+        "body": [
+            "math.tointeger(${1:x})"
+        ],
+        "description": "If the value x is convertible to an integer, returns that integer. Otherwise, returns nil."
+    },
+
+    "math.type": {
+        "prefix": [
+            "math.type"
+        ],
+        "body": [
+            "math.type(${1:x})"
+        ],
+        "description": "Returns 'integer' if x is an integer, 'float' if it is a float, or nil if x is not a number."
+    },
+
+    "math.ult": {
+        "prefix": [
+            "math.ult"
+        ],
+        "body": [
+            "math.ult(${1:m}, ${2:n})"
+        ],
+        "description": "Returns a boolean, true if integer m is below integer n when they are compared as unsigned integers."
+    },
+
+}
