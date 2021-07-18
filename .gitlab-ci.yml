@@ -13,8 +13,7 @@ before_script:
   # install dependencies
   - cd source
   - cabal update
-  - cabal install uu-tc
-  - cd ~/.cabal/config
+  - cd root/.cabal/config
   - ls
 
 
