@@ -9,38 +9,51 @@
 # you can delete this line if you're not using Docker
 image: haskell:9
 
+stages:
+  - build
+  - release
+
+# determines where packages are installed, required for caching as that 
+# can only happen for a folder inside the repository
+variables:
+  STACK_ROOT: "${CI_PROJECT_DIR}/.stack-root"
+
+# cache everything stack related so that libraries do not need to be rebuild
 cache:
   paths:
-  - ~/root/.cabal/
+    - .stack-work/
+    - .stack-root/
 
-before_script:
-  # install dependencies
-  - cd source
-  - cabal update
-  - cabal install --only-dependencies
+# before_script:
+#   # install dependencies
 
-after_script:
-  - echo "Bob was here."
 
-build1:
+# after_script:
+#   # clean out build files
+
+build:
   stage: build
   script:
-    # build the project
-    - cabal v2-install --overwrite-policy=always
+      # build the project
+    - cd source
+    - stack update
+    - stack install
+    - stack clean
 
-# test1:
-#   stage: test
-#   script:
-#     - echo "Do a test here"
-#     - echo "For example run a test suite"
-
-# test2:
-#   stage: test
-#   script:
-#     - echo "Do another parallel test here"
-#     - echo "For example run a lint test"
-
-deploy1:
-  stage: deploy
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli
+  when: manual
+  # We recommend the use of `rules` to prevent these pipelines
+  # from running. See the notes section below for details.
+  except:
+    - tags
   script:
-    - echo "Do your deploy here"
+    - >
+      release-cli create --name release-branch-$CI_JOB_ID --description release-branch-$CI_COMMIT_REF_NAME-$CI_JOB_ID
+      --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
+      --assets-link '{"name":"Asset1","url":"https://<domain>/some/location/1","link_type":"other","filepath":"xzy"}'
+      --assets-link '{"name":"Asset2","url":"https://<domain>/some/location/2"}'
+      --milestone "v1.0.0" --milestone "v1.0.0-rc"
+      --released-at "2020-06-30T07:00:00Z"
+
