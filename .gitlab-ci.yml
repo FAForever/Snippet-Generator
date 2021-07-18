@@ -24,21 +24,21 @@ cache:
     - .stack-work/
     - .stack-root/
 
-before_script:
-  # install dependencies
-  - cd source
-  - stack update
-  - stack build --only-dependencies
+# before_script:
+#   # install dependencies
 
-after_script:
-  # clean out build files
-  - stack clean
+
+# after_script:
+#   # clean out build files
 
 build:
   stage: build
   script:
-    # build the project
-    - stack install
+      # build the project
+    - cd source
+    - stack update
+    - stack install --only-dependencies
+    - stack clean
 
 release:
   stage: release
