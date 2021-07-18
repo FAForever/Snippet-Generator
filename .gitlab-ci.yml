@@ -31,7 +31,6 @@ build1:
     - pwd
 
     # moving into source and compiling
-    - cd source
     - cabal v2-build
 
 # test1:
