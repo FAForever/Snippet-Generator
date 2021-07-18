@@ -9,30 +9,24 @@
 # you can delete this line if you're not using Docker
 image: haskell:9
 
+cache:
+  paths:
+  - /root/.cabal
+
 before_script:
   # install dependencies
   - cd source
   - cabal update
-  - cd /root/.cabal
-  - ls
-
+  - cabal install --only-dependencies
 
 after_script:
-  - echo "After script section"
-  - echo "For example you might do some cleanup here"
+  - echo "Bob was here."
 
 build1:
   stage: build
   script:
-    - echo "Do your build here"
-
-    # checking
-    - ghc --version
-    - cabal --version
-    - pwd
-
-    # moving into source and compiling
-    - cabal v2-build
+    # build the project
+    - cabal v2-install
 
 # test1:
 #   stage: test
