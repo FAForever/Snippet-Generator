@@ -12,6 +12,7 @@ image: haskell:9
 before_script:
   # install dependencies
   - cd source
+  - cabal update
   - cabal install --only-dependencies
 
 
