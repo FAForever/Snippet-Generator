@@ -46,6 +46,8 @@ release:
   when: manual
   # We recommend the use of `rules` to prevent these pipelines
   # from running. See the notes section below for details.
+  except:
+    - tags
   script:
     - >
       release-cli create --name release-branch-$CI_JOB_ID --description release-branch-$CI_COMMIT_REF_NAME-$CI_JOB_ID
