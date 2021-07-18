@@ -37,7 +37,7 @@ build:
       # build the project
     - cd source
     - stack update
-    - stack install --only-dependencies
+    - stack install
     - stack clean
 
 release:
