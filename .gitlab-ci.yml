@@ -15,6 +15,7 @@ before_script:
   - echo "Or perhaps you might print out some debugging details"
   - ghc --version
   - cabal --version
+  - pwd
 
 after_script:
   - echo "After script section"
