@@ -27,7 +27,8 @@ before_script:
   - stack build --only-dependencies
 
 after_script:
-  - echo "Bob was here."
+  # clean out build files
+  - stack clean
 
 build1:
   stage: build
