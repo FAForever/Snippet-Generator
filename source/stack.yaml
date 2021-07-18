@@ -17,6 +17,12 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
+
+# copies the executable into a local bin folder, easy to find for other scripts
+# https://github.com/commercialhaskell/stack/issues/1340
+# https://stackoverflow.com/questions/51352885/how-do-you-set-the-executable-output-location-for-a-haskell-project-built-with-s
+local-bin-path: ./bin/
+  
 resolver:
   url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/2.yaml
 

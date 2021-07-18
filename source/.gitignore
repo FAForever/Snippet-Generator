@@ -1,5 +1,6 @@
 .ghc*
 .stack-work
+bin
 dist
 dist-newstyle
 examples
