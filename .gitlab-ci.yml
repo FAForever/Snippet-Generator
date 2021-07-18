@@ -43,5 +43,7 @@ build:
 
 deploy:
   stage: deploy
+  only:
+    - master
   script:
     - echo "Do your deploy here"
