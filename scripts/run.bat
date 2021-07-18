@@ -29,6 +29,7 @@ call metatable-alt.bat metatable/cprojectile.lua projectile
 call metatable-alt.bat metatable/cprop.lua prop
 call metatable-alt.bat metatable/cunit.lua unit
 call metatable-alt.bat metatable/cunitweapon.lua weapon
+call metatable-alt.bat metatable/window.lua window
 
 REM generate from table-based files
 REM function ScenarioUtils.GetMarker(name) (...) end
