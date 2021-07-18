@@ -10,12 +10,10 @@
 image: haskell:9
 
 before_script:
-  - echo "Before script section"
-  - echo "For example you might run an update here or install a build dependency"
-  - echo "Or perhaps you might print out some debugging details"
-  - ghc --version
-  - cabal --version
-  - pwd
+  # install dependencies
+  - cd source
+  - cabal install --only-dependencies
+
 
 after_script:
   - echo "After script section"
@@ -26,17 +24,26 @@ build1:
   script:
     - echo "Do your build here"
 
-test1:
-  stage: test
-  script:
-    - echo "Do a test here"
-    - echo "For example run a test suite"
+    # checking
+    - ghc --version
+    - cabal --version
+    - pwd
 
-test2:
-  stage: test
-  script:
-    - echo "Do another parallel test here"
-    - echo "For example run a lint test"
+    # moving into source and compiling
+    - cd source
+    - cabal v2-build
+
+# test1:
+#   stage: test
+#   script:
+#     - echo "Do a test here"
+#     - echo "For example run a test suite"
+
+# test2:
+#   stage: test
+#   script:
+#     - echo "Do another parallel test here"
+#     - echo "For example run a lint test"
 
 deploy1:
   stage: deploy
