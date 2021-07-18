@@ -9,15 +9,22 @@
 # you can delete this line if you're not using Docker
 image: haskell:9
 
+# determines where packages are installed, required for caching as that 
+# can only happen for a folder inside the repository
+variables:
+  STACK_ROOT: "${CI_PROJECT_DIR}/.stack-root"
+
+# cache everything stack related so that libraries do not need to be rebuild
 cache:
   paths:
-  - ~/root/.cabal/
+    - .stack-work/
+    - .stack-root/
 
 before_script:
   # install dependencies
   - cd source
-  - cabal update
-  - cabal install --only-dependencies
+  - stack update
+  - stack build --only-dependencies
 
 after_script:
   - echo "Bob was here."
@@ -26,7 +33,7 @@ build1:
   stage: build
   script:
     # build the project
-    - cabal v2-install --overwrite-policy=always
+    - stack install
 
 # test1:
 #   stage: test
