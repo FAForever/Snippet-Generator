@@ -13,7 +13,9 @@ before_script:
   # install dependencies
   - cd source
   - cabal update
-  - cabal install --only-dependencies
+  - cabal install uu-tc
+  - cd ~/.cabal/config
+  - ls
 
 
 after_script:
