@@ -70,7 +70,6 @@ executable snippet-generator
   build-depends:       base,
                        containers,
                        array,
-                       uu-tc,
                        text,
                        aeson,
                        aeson-pretty,

@@ -1,4 +1,5 @@
 .ghc*
+.stack-work
 dist
 dist-newstyle
 examples
